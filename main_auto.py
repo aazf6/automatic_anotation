@@ -1,6 +1,6 @@
 import os
 import yaml
-from main import main_process  # Step1で関数化したmain.py
+from main import main_process  # 関数化したmain.py
 from ultralytics import YOLO
 import shutil, glob, random
 
