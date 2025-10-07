@@ -63,3 +63,30 @@ names:
     print(f"--- {category}: data.yamlを生成しました ({yaml_path}) ---")
 
 print("\n✅ すべてのカテゴリ処理が完了しました！")
+
+from ultralytics import YOLO
+
+# YOLOモデルのロード
+model = YOLO("yolov8m.pt")
+
+# COCOクラスのループ（上でmain_processを回したあと）
+for category in COCO_CATEGORIES:
+    yaml_path = f"/content/automatic_anotation/outputs/{category}/data.yaml"
+    if not os.path.exists(yaml_path):
+        print(f"[スキップ] {category}: data.yamlが存在しません。")
+        continue
+
+    print(f"\n🚀 {category} モデルの学習を開始します ---")
+    model.train(
+        data=yaml_path,
+        epochs=100,
+        batch=16,
+        imgsz=640
+    )
+
+    # 学習済みモデルを保存（任意）
+    save_dir = f"/content/automatic_anotation/outputs/{category}/trained"
+    os.makedirs(save_dir, exist_ok=True)
+    model.export(format="pt", project=save_dir, name=f"{category}_best")
+
+    print(f"✅ {category}: 学習完了 & モデル保存 ({save_dir})")
