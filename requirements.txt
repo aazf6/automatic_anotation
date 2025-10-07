@@ -9,3 +9,4 @@ transformers
 numpy
 tqdm
 moondream
+ultralytics
